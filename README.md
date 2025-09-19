@@ -1,5 +1,6 @@
 # Cellula-Internship
 A computer vision internship project
+# First Task
 
 # 🦷 Teeth Classification with CNN (From Scratch)
 
@@ -91,3 +92,97 @@ streamlit run streamlit_app.py
 
 - Visualize class probabilities in an interactive bar chart
 ---
+
+# Second Task
+
+# 💧 Water Segmentation with UNet (From Scratch)
+
+This project focuses on **water body segmentation** from multi-channel satellite imagery using a **custom UNet architecture (from scratch, no pretrained backbone)**.
+
+---
+
+## ✨ Key Features
+- **Multi-channel input (12 bands)** including Blue, Green, Red, NIR, SWIR, DEM, WaterProb + computed NDWI & MNDWI  
+- **Class imbalance handling** with Dice + BCE loss (optionally focal loss)  
+- **Data augmentation** (flips, rotations, elastic transforms, brightness/contrast)  
+- **Visualization modules**:  
+  - EDA histograms of water fraction per image  
+  - Band composites & NDWI/MNDWI visualizations  
+  - Normalization stats per-channel  
+  - Before/after normalization previews  
+- **Evaluation metrics**: IoU, Dice coefficient, classification report  
+
+---
+
+## 📂 Dataset Structure
+
+project_root/
+├── data/
+│ └── data/
+│ ├── images/
+│ └── labels/
+├── notebooks/
+│ └── Water_Segmentation_Enhanced.ipynb
+
+---
+
+## ⚙️ Setup
+Install dependencies:
+
+
+pip install torch torchvision rasterio albumentations scikit-learn matplotlib tqdm
+
+---
+
+## 🚀 Training
+
+
+Training setup:
+- **Architecture:** UNet (custom encoder-decoder with skip connections)
+
+- **Optimizer:** Adam (lr=1e-3)
+
+- **Loss:**Dice + BCE
+
+- **Batch size:** 16
+
+- **Epochs:** 60
+
+- **Image size:** 128 × 128
+
+- **Best model saved under :** experiments_clean/best_model.pth
+
+---
+## 📊 Evaluation
+The trained model outputs:
+
+- IoU, Dice scores on validation/test sets
+
+- Classification report (precision, recall, F1 for water/background)
+
+- Visual comparisons (input, prediction, ground truth masks)
+
+Example final test performance:
+
+**Test Loss:** ~0.34
+
+**Test IoU:** ~0.54
+
+**Test Dice:** ~0.68
+
+---
+## 🔍 Visualization Examples
+
+-Water fraction histogram across dataset
+
+-Example composites (RGB, NIR-SWIR, NDWI, MNDWI)
+
+-Before/after normalization for a sample patch
+
+-Predicted segmentation overlays
+
+---
+## 📌 Summary
+
+This project delivers an end-to-end segmentation pipeline for detecting water bodies in satellite imagery.
+It covers EDA, preprocessing, custom UNet model training, evaluation, and rich visualizations for both data and predictions.
