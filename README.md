@@ -97,10 +97,13 @@ streamlit run streamlit_app.py
 
 # 💧 Water Segmentation with UNet (From Scratch)
 
-This project focuses on **water body segmentation** from multi-channel satellite imagery using a **custom UNet architecture (from scratch, no pretrained backbone)**.
+This project focuses on **water body segmentation** from multi-channel satellite imagery using two complementary approaches for water body segmentation from satellite imagery:
+
+**custom UNet architecture (from scratch, no pretrained backbone)**
+**Pretrained UNet (ImageNet encoder, 3 channels, frozen encoder with fine-tuning)**
 
 ---
-
+### First Approach:
 ## ✨ Key Features
 - **Multi-channel input (12 bands)** including Blue, Green, Red, NIR, SWIR, DEM, WaterProb + computed NDWI & MNDWI  
 - **Class imbalance handling** with Dice + BCE loss (optionally focal loss)  
@@ -186,3 +189,21 @@ Example final test performance:
 
 This project delivers an end-to-end segmentation pipeline for detecting water bodies in satellite imagery.
 It covers EDA, preprocessing, custom UNet model training, evaluation, and rich visualizations for both data and predictions.
+
+---
+### Second Approach:
+## Pretrained UNet with Frozen Encoder
+
+In addition to the custom UNet (11-channel), a second experiment was conducted using transfer learning:
+
+**Architecture:** UNet with a ResNet encoder pretrained on ImageNet
+
+**Input:** adapted to 3 channels (RGB composite subset)
+
+**Training strategy:**
+
+- Encoder initially frozen → only the decoder and segmentation head were trained
+
+- After warm-up, the encoder was unfrozen and fine-tuned end-to-end
+
+**Segmentation head:** the final classifier layer that outputs water/non-water predictions
