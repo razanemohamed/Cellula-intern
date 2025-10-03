@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Water Segmentation Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .preview { max-width: 100%; height: auto; border: 1px solid #ddd; padding: 4px; background:#fafafa; }
+    .panel { margin-top: 1rem; }
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <h2 class="mb-3">Water Segmentation (pretrained UNet)</h2>
+    <p>Upload an image (RGB or multi-band TIFF). The server will produce a mask and an overlay.
+       Optionally upload a ground-truth mask (same spatial extent) to compute IoU.</p>
+
+    <form method="post" enctype="multipart/form-data" class="mb-4">
+      <div class="row g-2">
+        <div class="col-md-6">
+          <input class="form-control" type="file" name="image" accept=".png,.jpg,.jpeg,.tif,.tiff" required>
+        </div>
+        <div class="col-md-4">
+          <input class="form-control" type="file" name="gt_mask" accept=".png,.jpg,.jpeg,.tif,.tiff">
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary w-100" type="submit">Upload & Run</button>
+        </div>
+      </div>
+    </form>
+
+    {% if upload_image %}
+      <div class="row">
+        <div class="col-md-4 panel">
+          <h6>Original</h6>
+          <img src="{{ url_for('static', filename=upload_image.replace('static/','')) }}" class="preview">
+        </div>
+        <div class="col-md-4 panel">
+          <h6>Predicted Mask</h6>
+          <img src="{{ url_for('static', filename=mask_image.replace('static/','')) }}" class="preview">
+        </div>
+        <div class="col-md-4 panel">
+          <h6>Overlay</h6>
+          <img src="{{ url_for('static', filename=overlay_image.replace('static/','')) }}" class="preview">
+        </div>
+      </div>
+
+      {% if iou %}
+      <div class="row mt-3">
+        <div class="col-md-12">
+          <div class="alert alert-secondary">
+            <strong>IoU:</strong> {{ iou }} &nbsp; | &nbsp;
+            <strong>Assessment:</strong>
+            {% if assessment == "Good" %}
+              <span class="badge bg-success">{{ assessment }}</span>
+            {% elif assessment == "Acceptable" %}
+              <span class="badge bg-warning text-dark">{{ assessment }}</span>
+            {% else %}
+              <span class="badge bg-danger">{{ assessment }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+    {% else %}
+      <div class="alert alert-info">No image processed yet. Choose an image and click <strong>Upload & Run</strong>.</div>
+    {% endif %}
+    <footer class="mt-4 text-muted small">Model: pretrained UNet (resnet34) — input = 3-channel RGB composite</footer>
+  </div>
+</body>
+</html>
